@@ -21,7 +21,7 @@ jobs:
   test-actions:
     name: Test Action
     runs-on: ubuntu-latest
-    needs: [tests]
+    needs: [test-code]
     steps:
       - uses: actions/checkout@v2
 
