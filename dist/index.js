@@ -6174,14 +6174,15 @@ async function run() {
   try {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
-
+    
     const packageVersion = utils.findPackageVersionByTag(
       octokit,
       config.owner,
       config.name,
       config.tag
     );
-
+    core.info(`found id of package ${packageVersion.id}`)
+    
     await utils.deletePackageVersion(
       octokit, 
       config.owner, 
