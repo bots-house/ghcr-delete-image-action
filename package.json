@@ -1,5 +1,5 @@
 {
-  "name": "ghcr-delete-image",
+  "name": "ghcr-delete-image-action",
   "version": "1.0.0",
   "description": "JavaScript Action Template",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bots-house/ghcr-delete-image.git"
+    "url": "git+https://github.com/bots-house/ghcr-delete-image-action.git"
   },
   "keywords": [
     "GitHub",
@@ -21,11 +21,12 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bots-house/ghcr-delete-image/issues"
+    "url": "https://github.com/bots-house/ghcr-delete-image-action/issues"
   },
-  "homepage": "https://github.com/bots-house/ghcr-delete-image#readme",
+  "homepage": "https://github.com/bots-house/ghcr-delete-image-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.5",
+    "@actions/github": "^5.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.28.5",
