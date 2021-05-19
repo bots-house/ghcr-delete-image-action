@@ -7,7 +7,8 @@
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "test": "jest",
-    "all": "npm run lint && npm run prepare && npm run test"
+    "all": "npm run lint && npm run prepare && npm run test",
+    "release": "release-it --no-npm.publish --github.release --npm.ignoreVersion --git.tagName='v${version}'"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.28.5",
     "eslint": "^7.4.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "release-it": "^14.6.2"
   }
 }
