@@ -1,4 +1,4 @@
-name: "[CI] Tests"
+name: "CI"
 
 on:
   pull_request:
@@ -8,8 +8,8 @@ on:
       - 'releases/*'
 
 jobs:
-  # unit tests
-  units:
+  tests:
+    name: Unit & Integration Tests
     env:
       INTEGRATION_TEST_TOKEN: ${{ secrets.GCR_TOKEN }} 
     runs-on: ubuntu-latest
