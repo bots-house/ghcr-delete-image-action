@@ -7,6 +7,10 @@ on:
       - main
       - "releases/*"
 
+permissions:
+  contents: read
+  packages: read|write
+
 jobs:
   test-code:
     name: Test Code
