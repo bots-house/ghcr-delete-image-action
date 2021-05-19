@@ -1,6 +1,6 @@
 {
   "name": "ghcr-delete-image-action",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "JavaScript Action Template",
   "main": "index.js",
   "scripts": {
