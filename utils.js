@@ -24,21 +24,35 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   )) {
     for (let packageVersion of response.data) {
       const versionTags = packageVersion.metadata.container.tags;
-      
-      if(versionTags.includes(tag)) {
-        return packageVersion
+
+      if (versionTags.includes(tag)) {
+        return packageVersion;
       } else {
-        versionTags.map(item => {
-          tags.add(item)
-        })
+        versionTags.map((item) => {
+          tags.add(item);
+        });
       }
     }
   }
 
-  throw new Error(`package with tag '${tag}' does not exits, available tags: ${Array.from(tags).join(', ')}`)
+  throw new Error(
+    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+      tags
+    ).join(", ")}`
+  );
+};
+
+let deletePackageVersion = async (octokit, owner, name, versionId) => {
+  await octokit.rest.packages.deletePackageVersionForOrg({
+    package_type: "container",
+    package_name: name,
+    org: owner,
+    package_version_id: versionId,
+  });
 };
 
 module.exports = {
   getConfig,
   findPackageVersionByTag,
+  deletePackageVersion,
 };
