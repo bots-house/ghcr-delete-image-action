@@ -1,4 +1,5 @@
-name: "units-test"
+name: "[CI] Tests"
+
 on:
   pull_request:
   push:
@@ -10,7 +11,7 @@ jobs:
   # unit tests
   units:
     env:
-      INTEGRATION_TEST_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      INTEGRATION_TEST_TOKEN: ${{ secrets.GCR_TOKEN }} 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
