@@ -1,13 +1,32 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Delete GitHub Container Registry Image'
+description: 'Delete GitHub Container Registry Image by specified tag'
+author: bots-house
+
+branding:
+  icon: delete
+  color: blue
+
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  owner:  
+    description: >
+      Owner of the package (user or organization)
     required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
+  name: 
+    description: >
+      Name of the package containing the version to delete.
+    required: true
+    
+  token: 
+    description: > 
+      Token with the necessary scopes to delete package versions.
+    required: true
+  
+  tag:
+    description: > 
+      Tag to delete
+    required: true
+
+
 runs:
   using: 'node12'
   main: 'dist/index.js'
