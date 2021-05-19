@@ -1,4 +1,4 @@
-name: 'Delete GitHub Container Registry Image'
+name: GHCR Delete Image
 description: 'Delete GitHub Container Registry Image by specified tag'
 author: bots-house
 
