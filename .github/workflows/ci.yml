@@ -50,5 +50,5 @@ jobs:
         with:
           owner: bots-house
           name: ghcr-delete-image-dummy
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GCR_TOKEN }}
           tag: ${{ github.run_number }}
