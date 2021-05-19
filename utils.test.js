@@ -10,13 +10,13 @@ describe("getConfig", () => {
 
   test("returns valid config", () => {
     process.env["INPUT_OWNER"] = "bots-house";
-    process.env["INPUT_NAME"] = "ghcr-delete-image";
+    process.env["INPUT_NAME"] = "ghcr-delete-image-action";
     process.env["INPUT_TOKEN"] = "some-token";
     process.env["INPUT_TAG"] = "latest";
 
     expect(utils.getConfig()).toStrictEqual({
       owner: "bots-house",
-      name: "ghcr-delete-image",
+      name: "ghcr-delete-image-action",
       token: "some-token",
       tag: "latest",
     });

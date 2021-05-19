@@ -11,6 +11,7 @@ inputs:
     description: >
       Owner of the package (user or organization)
     required: true
+    
   name: 
     description: >
       Name of the package containing the version to delete.
