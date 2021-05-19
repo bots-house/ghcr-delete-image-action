@@ -24,7 +24,7 @@ describe("getConfig", () => {
 });
 
 describe("findPackageVersionByTag", () => {
-  const token = process.env["TEST_TOKEN"];
+  const token = process.env["INTEGRATION_TEST_TOKEN"];
   expect(token).toBeTruthy();
 
   const octokit = github.getOctokit(token);
@@ -40,7 +40,6 @@ describe("findPackageVersionByTag", () => {
   }, 15000);
 
   test("not existing version throw error", () => {
-
     return expect(utils.findPackageVersionByTag(
       octokit,
       "bots-house",
