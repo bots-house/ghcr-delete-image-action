@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/bots-house/ghcr-delete-image#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.5",
+    "@actions/github": "^5.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.28.5",
