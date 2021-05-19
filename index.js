@@ -7,20 +7,25 @@ async function run() {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
     
-    const packageVersion = utils.findPackageVersionByTag(
+    core.info(`🔎 search package version with tag ${config.tag}...`)
+
+    const packageVersion = await utils.findPackageVersionByTag(
       octokit,
       config.owner,
       config.name,
       config.tag
     );
-    core.info(`found id of package ${packageVersion.id}`)
     
+    core.info(`🆔 package id is #${packageVersion.id}, delete it...`)
+
     await utils.deletePackageVersion(
       octokit, 
       config.owner, 
       config.name, 
       packageVersion.id,
     )
+
+    core.info(`✅ package #${packageVersion.id} deleted.`)
   } catch (error) {
     core.setFailed(error.message);
   }
