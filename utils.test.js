@@ -144,7 +144,7 @@ describe("findPackageVersionsUntaggedOrderGreaterThan", () => {
       2
     );
 
-    expect(pkgs.length).toBeGreaterThan(5);
+    expect(pkgs.length).toBeGreaterThanOrEqual(5);
     // expect(packageVersion.id).toBe(266441);
   }, 15000);
 
