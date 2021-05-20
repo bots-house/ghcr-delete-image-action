@@ -1,12 +1,50 @@
 const core = require("@actions/core");
 
+/**
+ * Parse input from env.
+ * @returns Config
+ */
 let getConfig = function () {
-  return {
+  const config = {
     owner: core.getInput("owner", { required: true }),
     name: core.getInput("name", { required: true }),
     token: core.getInput("token", { required: true }),
-    tag: core.getInput("tag", { required: true }),
+
+    // optional, mutual exclusive options
+    tag: core.getInput("tag") || null,
+    untaggedKeepLatest: core.getInput("untagged_keep_latest") || null,
+    untaggedOlderThan: core.getInput("untagged_older_than") || null,
   };
+
+  const definedOptionsCount = [
+    config.tag,
+    config.untaggedKeepLatest,
+    config.untaggedOlderThan,
+  ].filter((x) => x !== null).length;
+
+  if (definedOptionsCount == 0) {
+    throw new Error("no any required options defined");
+  } else if (definedOptionsCount > 1) {
+    throw new Error("too many selectors defined, use only one");
+  }
+
+  if (config.untaggedKeepLatest) {
+    if (
+      isNaN((config.untaggedKeepLatest = parseInt(config.untaggedKeepLatest)))
+    ) {
+      throw new Error("untagged-keep-latest is not number");
+    }
+  }
+
+  if (config.untaggedOlderThan) {
+    if (
+      isNaN((config.untaggedOlderThan = parseInt(config.untaggedOlderThan)))
+    ) {
+      throw new Error("untagged-older-than is not number");
+    }
+  }
+
+  return config;
 };
 
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
