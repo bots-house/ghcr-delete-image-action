@@ -1,6 +1,67 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 358:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const utils = __nccwpck_require__(252);
+const core = __nccwpck_require__(186);
+
+async function deleteByTag(config, octokit) {
+  core.info(`🔎 search package version with tag ${config.tag}...`);
+
+  const packageVersion = await utils.findPackageVersionByTag(
+    octokit,
+    config.owner,
+    config.name,
+    config.tag
+  );
+
+  core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
+
+  await utils.deletePackageVersion(
+    octokit,
+    config.owner,
+    config.name,
+    packageVersion.id
+  );
+
+  core.info(`✅ package #${packageVersion.id} deleted.`);
+}
+
+async function deleteUntaggedOrderGreaterThan(config, octokit) {
+  core.info(`🔎 find not latest ${config.untaggedKeepLatest} packages...`);
+
+  const pkgs = await utils.findPackageVersionsUntaggedOrderGreaterThan(
+    octokit,
+    config.owner,
+    config.name,
+    config.untaggedKeepLatest
+  );
+
+  core.startGroup(`🗑 delete ${pkgs.length} packages`);
+
+  for (const pkg of pkgs) {
+    await utils.deletePackageVersion(
+      octokit,
+      config.owner,
+      config.name,
+      pkg.id
+    );
+
+    core.info(`✅ package #${pkg.id} deleted.`);
+
+    await utils.sleep(1000);
+  }
+
+  core.endGroup();
+}
+
+module.exports = { deleteByTag, deleteUntaggedOrderGreaterThan };
+
+
+/***/ }),
+
 /***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -5955,18 +6016,99 @@ function wrappy (fn, cb) {
 
 const core = __nccwpck_require__(186);
 
+/**
+ * Parse input from env.
+ * @returns Config
+ */
 let getConfig = function () {
-  return {
+  const config = {
     owner: core.getInput("owner", { required: true }),
     name: core.getInput("name", { required: true }),
     token: core.getInput("token", { required: true }),
-    tag: core.getInput("tag", { required: true }),
+
+    // optional, mutual exclusive options
+    tag: core.getInput("tag") || null,
+    untaggedKeepLatest: core.getInput("untagged_keep_latest") || null,
+    untaggedOlderThan: core.getInput("untagged_older_than") || null,
   };
+
+  const definedOptionsCount = [
+    config.tag,
+    config.untaggedKeepLatest,
+    config.untaggedOlderThan,
+  ].filter((x) => x !== null).length;
+
+  if (definedOptionsCount == 0) {
+    throw new Error("no any required options defined");
+  } else if (definedOptionsCount > 1) {
+    throw new Error("too many selectors defined, use only one");
+  }
+
+  if (config.untaggedKeepLatest) {
+    if (
+      isNaN((config.untaggedKeepLatest = parseInt(config.untaggedKeepLatest)))
+    ) {
+      throw new Error("untagged-keep-latest is not number");
+    }
+  }
+
+  if (config.untaggedOlderThan) {
+    if (
+      isNaN((config.untaggedOlderThan = parseInt(config.untaggedOlderThan)))
+    ) {
+      throw new Error("untagged-older-than is not number");
+    }
+  }
+
+  return config;
 };
 
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   const tags = new Set();
 
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.includes(tag)) {
+      return pkgVer;
+    } else {
+      versionTags.map((item) => {
+        tags.add(item);
+      });
+    }
+  }
+
+  throw new Error(
+    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+      tags
+    ).join(", ")}`
+  );
+};
+
+let findPackageVersionsUntaggedOrderGreaterThan = async function (
+  octokit,
+  owner,
+  name,
+  n
+) {
+  const pkgs = [];
+
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.length == 0) {
+      pkgs.push(pkgVer);
+    }
+  }
+
+  pkgs.sort((a, b) => {
+    return new Date(b.updated_at) - new Date(a.updated_at);
+  });
+
+  return pkgs.slice(n);
+};
+
+let iteratePackageVersions = async function* (octokit, owner, name) {
   for await (const response of octokit.paginate.iterator(
     octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
     {
@@ -5978,23 +6120,9 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     }
   )) {
     for (let packageVersion of response.data) {
-      const versionTags = packageVersion.metadata.container.tags;
-
-      if (versionTags.includes(tag)) {
-        return packageVersion;
-      } else {
-        versionTags.map((item) => {
-          tags.add(item);
-        });
-      }
+      yield packageVersion;
     }
   }
-
-  throw new Error(
-    `package with tag '${tag}' does not exits, available tags: ${Array.from(
-      tags
-    ).join(", ")}`
-  );
 };
 
 let deletePackageVersion = async (octokit, owner, name, versionId) => {
@@ -6006,10 +6134,18 @@ let deletePackageVersion = async (octokit, owner, name, versionId) => {
   });
 };
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 module.exports = {
   getConfig,
   findPackageVersionByTag,
   deletePackageVersion,
+  findPackageVersionsUntaggedOrderGreaterThan,
+  sleep,
 };
 
 
@@ -6169,31 +6305,18 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(186);
 const github = __nccwpck_require__(438);
 const utils = __nccwpck_require__(252);
+const actions = __nccwpck_require__(358);
 
 async function run() {
   try {
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
-    
-    core.info(`🔎 search package version with tag ${config.tag}...`)
 
-    const packageVersion = await utils.findPackageVersionByTag(
-      octokit,
-      config.owner,
-      config.name,
-      config.tag
-    );
-    
-    core.info(`🆔 package id is #${packageVersion.id}, delete it...`)
-
-    await utils.deletePackageVersion(
-      octokit, 
-      config.owner, 
-      config.name, 
-      packageVersion.id,
-    )
-
-    core.info(`✅ package #${packageVersion.id} deleted.`)
+    if (config.tag) {
+      await actions.deleteByTag(config, octokit);
+    } else if (config.untaggedKeepLatest) {
+      await actions.deleteUntaggedOrderGreaterThan(config, octokit);
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
