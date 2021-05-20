@@ -1,8 +1,8 @@
 FROM alpine:3.13.5
 
 ARG RUN_NUMBER
-ENV RUN_NUMBER=${RUN_NUMBER}}
+ENV RUN_NUMBER=${RUN_NUMBER}
 
 LABEL org.opencontainers.image.source="https://github.com/bots-house/ghcr-delete-image"
 
-RUN echo ${RUN_NUMBER} > dummy
+RUN echo $RUN_NUMBER > dummy

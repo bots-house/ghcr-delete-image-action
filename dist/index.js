@@ -6309,7 +6309,6 @@ const actions = __nccwpck_require__(358);
 
 async function run() {
   try {
-    core.info(JSON.stringify(process.env, null, 2));
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
 
