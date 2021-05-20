@@ -50,6 +50,49 @@ let getConfig = function () {
 let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   const tags = new Set();
 
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.includes(tag)) {
+      return pkgVer;
+    } else {
+      versionTags.map((item) => {
+        tags.add(item);
+      });
+    }
+  }
+
+  throw new Error(
+    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+      tags
+    ).join(", ")}`
+  );
+};
+
+let findPackageVersionsUntaggedOrderGreaterThan = async function (
+  octokit,
+  owner,
+  name,
+  n
+) {
+  const pkgs = [];
+
+  for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
+    const versionTags = pkgVer.metadata.container.tags;
+
+    if (versionTags.length == 0) {
+      pkgs.push(pkgVer);
+    }
+  }
+
+  pkgs.sort((a, b) => {
+    return new Date(b.updated_at) - new Date(a.updated_at);
+  });
+
+  return pkgs.slice(n);
+};
+
+let iteratePackageVersions = async function* (octokit, owner, name) {
   for await (const response of octokit.paginate.iterator(
     octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
     {
@@ -61,23 +104,9 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
     }
   )) {
     for (let packageVersion of response.data) {
-      const versionTags = packageVersion.metadata.container.tags;
-
-      if (versionTags.includes(tag)) {
-        return packageVersion;
-      } else {
-        versionTags.map((item) => {
-          tags.add(item);
-        });
-      }
+      yield packageVersion;
     }
   }
-
-  throw new Error(
-    `package with tag '${tag}' does not exits, available tags: ${Array.from(
-      tags
-    ).join(", ")}`
-  );
 };
 
 let deletePackageVersion = async (octokit, owner, name, versionId) => {
@@ -89,8 +118,16 @@ let deletePackageVersion = async (octokit, owner, name, versionId) => {
   });
 };
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 module.exports = {
   getConfig,
   findPackageVersionByTag,
   deletePackageVersion,
+  findPackageVersionsUntaggedOrderGreaterThan,
+  sleep,
 };

@@ -7,8 +7,6 @@ on:
       - main
       - "releases/*"
 
-
-
 jobs:
   test-code:
     name: Test Code
@@ -20,8 +18,65 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  test-actions:
-    name: Test Action
+  test-actions-delete-latest-n:
+    name: Test action delete latest N packages
+    runs-on: ubuntu-latest
+    needs: [test-code]
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Dummy Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: Dockerfile.dummy
+          build-args: |
+            RUN_NUMBER: ${{ github.run_number }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ghcr-delete-image-dummy:untagged
+
+      - name: Build and Push Dummy Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: Dockerfile.dummy
+          build-args: |
+            RUN_NUMBER: ${{ github.run_number }}-1
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ghcr-delete-image-dummy:untagged
+
+      - name: Build and Push Dummy Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: Dockerfile.dummy
+          build-args: |
+            RUN_NUMBER: ${{ github.run_number }}-2
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ghcr-delete-image-dummy:untagged
+
+      - uses: ./
+        with:
+          owner: bots-house
+          name: ghcr-delete-image-dummy
+          token: ${{ secrets.GCR_TOKEN }}
+          untagged-keep-latest: 1
+
+  test-actions-delete-by-tag:
+    name: Test action delete by tag
     runs-on: ubuntu-latest
     needs: [test-code]
     permissions:

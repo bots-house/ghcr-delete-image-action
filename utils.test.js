@@ -129,3 +129,33 @@ describe("findPackageVersionByTag", () => {
     ).rejects.toThrow(new RegExp("package with tag"));
   });
 });
+
+describe("findPackageVersionsUntaggedOrderGreaterThan", () => {
+  const token = process.env["INTEGRATION_TEST_TOKEN"];
+  expect(token).toBeTruthy();
+
+  const octokit = github.getOctokit(token);
+
+  test("returns greater than 5 objects", async () => {
+    const pkgs = await utils.findPackageVersionsUntaggedOrderGreaterThan(
+      octokit,
+      "bots-house",
+      "docker-telegram-bot-api",
+      2
+    );
+
+    expect(pkgs.length).toBeGreaterThan(5);
+    // expect(packageVersion.id).toBe(266441);
+  }, 15000);
+
+  // test("not existing version throw error", () => {
+  //   return expect(
+  //     utils.findPackageVersionByTag(
+  //       octokit,
+  //       "bots-house",
+  //       "docker-telegram-bot-api",
+  //       "test"
+  //     )
+  //   ).rejects.toThrow(new RegExp("package with tag"));
+  // });
+});
