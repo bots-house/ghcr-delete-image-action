@@ -4,3 +4,5 @@ ARG RUN_NUMBER
 ENV RUN_NUMBER=${RUN_NUMBER}}
 
 LABEL org.opencontainers.image.source="https://github.com/bots-house/ghcr-delete-image"
+
+CMD [ "echo", "${RUN_NUMBER}" ]

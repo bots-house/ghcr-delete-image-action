@@ -5,7 +5,6 @@ const actions = require("./actions");
 
 async function run() {
   try {
-    core.info(JSON.stringify(process.env, null, 2));
     const config = utils.getConfig();
     const octokit = github.getOctokit(config.token);
 
