@@ -6028,8 +6028,8 @@ let getConfig = function () {
 
     // optional, mutual exclusive options
     tag: core.getInput("tag") || null,
-    untaggedKeepLatest: core.getInput("untagged_keep_latest") || null,
-    untaggedOlderThan: core.getInput("untagged_older_than") || null,
+    untaggedKeepLatest: core.getInput("untagged-keep-latest") || null,
+    untaggedOlderThan: core.getInput("untagged-older-than") || null,
   };
 
   const definedOptionsCount = [

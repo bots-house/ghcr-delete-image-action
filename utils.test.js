@@ -62,8 +62,8 @@ describe("getConfig", () => {
     withEnv(
       {
         ...sharedRequiredOpts,
-        INPUT_UNTAGGED_KEEP_LATEST: "2",
-        INPUT_UNTAGGED_OLDER_THAN: "3",
+        "INPUT_UNTAGGED-KEEP-LATEST": "2",
+        "INPUT_UNTAGGED-OLDER-THAN": "3",
       },
       () => {
         expect(() => utils.getConfig()).toThrow(
@@ -77,7 +77,7 @@ describe("getConfig", () => {
     withEnv(
       {
         ...sharedRequiredOpts,
-        INPUT_UNTAGGED_KEEP_LATEST: "asdf",
+        "INPUT_UNTAGGED-KEEP-LATEST": "asdf",
       },
       () => {
         expect(() => utils.getConfig()).toThrow(
@@ -91,7 +91,7 @@ describe("getConfig", () => {
     withEnv(
       {
         ...sharedRequiredOpts,
-        INPUT_UNTAGGED_OLDER_THAN: "asdf",
+        "INPUT_UNTAGGED-OLDER-THAN": "asdf",
       },
       () => {
         expect(() => utils.getConfig()).toThrow(
