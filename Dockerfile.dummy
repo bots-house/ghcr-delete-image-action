@@ -1,4 +1,4 @@
-FROM scratch
+FROM alpine:3.13.5
 
 ARG RUN_NUMBER
 ENV RUN_NUMBER=${RUN_NUMBER}}
