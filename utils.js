@@ -79,7 +79,7 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
     const versionTags = pkgVer.metadata.container.tags;
-    console.log(JSON.stringify(pkgVer), null, 2);
+    core.info(JSON.stringify(pkgVer), null, 2);
     if (versionTags.length == 0) {
       pkgs.push(pkgVer);
     }
