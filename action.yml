@@ -1,5 +1,9 @@
 name: GHCR Delete Image
-description: 'Delete GitHub Container Registry Image by specified tag'
+
+description: > 
+  Delete GitHub Container Registry Image by specified tag (or without tag).
+  Options tag, untagged-keep-latest and untagged-older-than mutually exclusive. 
+
 author: bots-house
 
 branding:
@@ -25,8 +29,18 @@ inputs:
   tag:
     description: > 
       Tag to delete
-    required: true
+    required: false
+  
+  untagged-keep-latest:
+    description: > 
+      Delete all untagged images except the last N
+    required: false
 
+  untagged-older-than:
+    description: > 
+      Delete all untagged images older than N in days.
+    required: false
+  
 
 runs:
   using: 'node12'
