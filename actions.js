@@ -44,8 +44,6 @@ async function deleteUntaggedOrderGreaterThan(config, octokit) {
     );
 
     core.info(`✅ package #${pkg.id} deleted.`);
-
-    await utils.sleep(1000);
   }
 
   core.endGroup();

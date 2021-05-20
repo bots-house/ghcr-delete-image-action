@@ -50,8 +50,6 @@ async function deleteUntaggedOrderGreaterThan(config, octokit) {
     );
 
     core.info(`✅ package #${pkg.id} deleted.`);
-
-    await utils.sleep(1000);
   }
 
   core.endGroup();
@@ -6095,7 +6093,6 @@ let findPackageVersionsUntaggedOrderGreaterThan = async function (
 
   for await (const pkgVer of iteratePackageVersions(octokit, owner, name)) {
     const versionTags = pkgVer.metadata.container.tags;
-    core.info(JSON.stringify(pkgVer), null, 2);
     if (versionTags.length == 0) {
       pkgs.push(pkgVer);
     }
