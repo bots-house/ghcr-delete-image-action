@@ -33,6 +33,6 @@
     "@vercel/ncc": "^0.28.5",
     "eslint": "^7.4.0",
     "jest": "^27.0.1",
-    "release-it": "^14.6.2"
+    "release-it": "^14.7.0"
   }
 }
