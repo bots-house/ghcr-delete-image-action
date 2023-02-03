@@ -76,7 +76,7 @@ jobs:
 
       - uses: ./
         with:
-          owner: bots-house
+          owner: ${{ github.repository_owner }}
           name: ghcr-delete-image-dummy
           token: ${{ secrets.GCR_TOKEN }}
           untagged-keep-latest: 1
@@ -109,7 +109,7 @@ jobs:
 
       - uses: ./
         with:
-          owner: bots-house
+          owner: ${{ github.repository_owner }}
           name: ghcr-delete-image-dummy
           token: ${{ secrets.GCR_TOKEN }}
           tag: ${{ github.run_number }}
