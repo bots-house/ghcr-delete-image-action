@@ -9,10 +9,10 @@ Useful for cleanup of pull request scoped images.
 
 ## Usage 
 
-Example of workflow, that delete image when PR was closed.
+## Delete image when PR was closed.
 
 ```yaml
-name: '[RM] Preview'
+name: Cleanup PR Images
 
 on:
   pull_request:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete image
-        uses: bots-house/ghcr-delete-image-action@v1.0.0
+        uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
           # NOTE: at now only orgs is supported
           owner: bots-house
@@ -32,4 +32,32 @@ jobs:
           # NOTE: using Personal Access Token
           token: ${{ secrets.PAT }}
           tag: pr-${{github.event.pull_request.number}}
+```
+
+## Keep latest N untagged images
+
+```yaml
+name: Cleanup Untagged Images
+
+on:
+  # every sunday at 00:00
+  schedule:
+    - cron: "0 0 * * SUN"
+  # or manually
+  workflow_dispatch:
+
+jobs:
+  delete-untagged-images:
+    name: Delete Untagged Images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
+        with:
+          # NOTE: at now only orgs is supported
+          owner: bots-house
+          name: some-web-service
+          # NOTE: using Personal Access Token
+          token: ${{ secrets.PAT }}
+          # Keep latest N untagged images
+          untagged-keep-latest: 3
 ```
