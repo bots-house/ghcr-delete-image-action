@@ -8,7 +8,8 @@ async function deleteByTag(config, octokit) {
     octokit,
     config.owner,
     config.name,
-    config.tag
+    config.tag,
+    config.is_user
   );
 
   core.info(`🆔 package id is #${packageVersion.id}, delete it...`);
@@ -17,7 +18,8 @@ async function deleteByTag(config, octokit) {
     octokit,
     config.owner,
     config.name,
-    packageVersion.id
+    packageVersion.id,
+    config.is_user
   );
 
   core.info(`✅ package #${packageVersion.id} deleted.`);
@@ -30,6 +32,7 @@ async function deleteUntaggedOrderGreaterThan(config, octokit) {
     octokit,
     config.owner,
     config.name,
+    config.is_user,
     config.untaggedKeepLatest
   );
 
@@ -41,7 +44,8 @@ async function deleteUntaggedOrderGreaterThan(config, octokit) {
         octokit,
         config.owner,
         config.name,
-        pkg.id
+        pkg.id,
+        config.is_user
       );
     } catch (error) {
       core.info(`⚠️ package #${pkg.id} not deleted: ${error.message}`);

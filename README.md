@@ -3,11 +3,10 @@
 [![CI](https://github.com/bots-house/ghcr-delete-image-action/actions/workflows/ci.yml/badge.svg)](https://github.com/bots-house/ghcr-delete-image-action/actions/workflows/ci.yml)
 [![wakatime](https://wakatime.com/badge/github/bots-house/ghcr-delete-image-action.svg)](https://wakatime.com/badge/github/bots-house/ghcr-delete-image-action)
 
-Delete image from [Github Container Registry](https://github.com/features/packages) by tag. 
-Useful for cleanup of pull request scoped images. 
+Delete image from [Github Container Registry](https://github.com/features/packages) by tag.
+Useful for cleanup of pull request scoped images.
 
-
-## Usage 
+## Usage
 
 ## Delete image when PR was closed.
 
@@ -26,9 +25,9 @@ jobs:
       - name: Delete image
         uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
-          # NOTE: at now only orgs is supported
           owner: bots-house
           name: some-web-service
+          # is_user: true  # Set this if owner is a user and not an org
           # NOTE: using Personal Access Token
           token: ${{ secrets.PAT }}
           tag: pr-${{github.event.pull_request.number}}
@@ -53,9 +52,9 @@ jobs:
     steps:
       - uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
-          # NOTE: at now only orgs is supported
           owner: bots-house
           name: some-web-service
+          # is_user: true  # Set this if owner is a user and not an org
           # NOTE: using Personal Access Token
           token: ${{ secrets.PAT }}
           # Keep latest N untagged images
