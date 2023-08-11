@@ -63,7 +63,7 @@ let findPackageVersionByTag = async function (octokit, owner, name, tag) {
   }
 
   throw new Error(
-    `package with tag '${tag}' does not exits, available tags: ${Array.from(
+    `package with tag '${tag}' does not exist, available tags: ${Array.from(
       tags
     ).join(", ")}`
   );
