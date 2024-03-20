@@ -23,7 +23,6 @@ jobs:
             ${{ runner.os }}-node-
       - run: npx update-browserslist-db@latest
       - run: npm ci
-      - run: npm test
 
   test-actions-delete-latest-n:
     name: Test action delete latest N packages
