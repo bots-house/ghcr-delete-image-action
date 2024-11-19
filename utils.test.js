@@ -34,6 +34,7 @@ describe("getConfig", () => {
       },
       () => {
         expect(utils.getConfig()).toStrictEqual({
+          is_user: "",
           owner: "bots-house",
           name: "ghcr-delete-image-action",
           token: "some-token",

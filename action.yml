@@ -40,6 +40,11 @@ inputs:
       Delete all untagged images older than N in days.
     required: false
 
+  is_user:
+    description: >
+      Set true if the owner is a user and not an organization.
+    required: false
+
 runs:
   using: "node20"
   main: "dist/index.js"
